@@ -48,6 +48,8 @@ def dict2xlsx(data, logs, queues):
 
     i1 = 0
     for i in range(4, 30):
+        for j in range(28, 28 + 13):
+            sheet1.cell(row=i, column=j, value='')
         for j in range(len(queues[i1]['serve_queue'])):
             sheet1.cell(row=i, column=j+28, value=queues[i1]['serve_queue'][j])
         for j in range(len(queues[i1]['wait_queue'])):

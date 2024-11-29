@@ -171,7 +171,7 @@ public class AcService implements IAcService {
     }
 
     @Override
-    public void tic() {
+    public synchronized void tic() {
         List<AcServer> serveQueueCopy = new ArrayList<>(serveQueue);
         for (AcServer acServer : serveQueueCopy) {
             Room room = iRoomService.getRoomByRoomId(acServer.getRoomId());
@@ -236,7 +236,7 @@ public class AcService implements IAcService {
     }
 
     @Override
-    public AcRequest getAcRequestByRoomId(String roomId) {
+    public synchronized AcRequest getAcRequestByRoomId(String roomId) {
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(roomId)) {
                 return acServer.toAcRequest();
