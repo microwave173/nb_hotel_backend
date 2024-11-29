@@ -106,12 +106,17 @@ public class AcServer {
         return acRequest;
     }
 
+//    @Override
+//    public String toString() {
+//        return "{" +
+//                "roomId='" + roomId + '\'' +
+//                ", acTemperature=" + acTemperature +
+//                ", acMode=" + acMode +
+//                '}';
+//    }
+
     @Override
     public String toString() {
-        return "{" +
-                "roomId='" + roomId + '\'' +
-                ", acTemperature=" + acTemperature +
-                ", acMode=" + acMode +
-                '}';
+        return roomId;
     }
 }

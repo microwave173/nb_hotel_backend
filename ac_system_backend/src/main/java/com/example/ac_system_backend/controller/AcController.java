@@ -48,7 +48,7 @@ public class AcController {
     public String changeAcParams(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
         try{
-            iAcService.updateAc(acRequest);
+            iAcService.updateAc(acRequest, "update params");
         }
         catch (Exception e){
             System.out.println(e.toString());
@@ -63,7 +63,7 @@ public class AcController {
         try{
             AcRequest acRequest1 = iAcService.getAcRequestByRoomId(acRequest.getRoomId());
             acRequest1.setAcTemperature(acRequest.getAcTemperature());
-            iAcService.updateAc(acRequest1);
+            iAcService.updateAc(acRequest1, "update temperature");
         }
         catch (Exception e){
             System.out.println(e.toString());
@@ -78,7 +78,7 @@ public class AcController {
         try{
             AcRequest acRequest1 = iAcService.getAcRequestByRoomId(acRequest.getRoomId());
             acRequest1.setAcMode(acRequest.getAcMode());
-            iAcService.updateAc(acRequest1);
+            iAcService.updateAc(acRequest1, "update mode");
         }
         catch (Exception e){
             System.out.println(e.toString());

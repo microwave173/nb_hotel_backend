@@ -2,13 +2,17 @@ package com.example.ac_system_backend.service.serviceImpl;
 
 import com.example.ac_system_backend.pojo.AcRequest;
 import com.example.ac_system_backend.pojo.AcServer;
+import com.example.ac_system_backend.pojo.LogUnit;
 import com.example.ac_system_backend.pojo.Room;
 import com.example.ac_system_backend.service.IAcService;
+import com.example.ac_system_backend.service.ILogsService;
 import com.example.ac_system_backend.service.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,8 +35,17 @@ public class AcService implements IAcService {
     @Value("${ac_settings.swap_tic}")
     private int swapTic;
 
+    @Value("${ac_settings.mi_per_du}")
+    private float miPerDu;
+
+    @Value("${room_prices}")
+    private List<Float> roomPriceList;
+
     @Autowired
     private IRoomService iRoomService;
+
+    @Autowired
+    private ILogsService iLogsService;
 
     private final PriorityQueue<AcServer> serveQueue = new PriorityQueue<>(
             Comparator.comparingInt(AcServer::getAcMode).thenComparingInt(AcServer::getNegServeTic)
@@ -58,6 +71,7 @@ public class AcService implements IAcService {
     @Override
     public synchronized void addAcRequest(AcRequest acRequest) {
         if (checkExist(acRequest.getRoomId())) return;
+        addLog(acRequest.getRoomId(), "turn on");
 
         if (serveQueue.size() < maxAcServerNum) {
             serveQueue.offer(acRequest.toAcServer());
@@ -72,7 +86,7 @@ public class AcService implements IAcService {
         if (waitQueue.isEmpty()) return;
 
         if (serveQueue.isEmpty()) {
-            while (!waitQueue.isEmpty()) {
+            while (!waitQueue.isEmpty() && serveQueue.size() < maxAcServerNum) {
                 AcRequest acRequest = waitQueue.poll();
                 if (acRequest != null) {
                     serveQueue.offer(acRequest.toAcServer());
@@ -92,12 +106,15 @@ public class AcService implements IAcService {
             waitQueue.poll();
             serveQueue.offer(waitHead.toAcServer());
             waitQueue.offer(serveHead.toAcRequest());
+            addLog(serveHead.getRoomId(), "removed from serve queue");
+            addLog(waitHead.getRoomId(), "add to serve queue");
             max_loop -= 1;
         }
     }
 
     @Override
-    public synchronized void updateAc(AcRequest acRequest) {
+    public synchronized void updateAc(AcRequest acRequest, String updateType) {
+        addLog(acRequest.getRoomId(), updateType);
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(acRequest.getRoomId())) {
                 serveQueue.remove(acServer);
@@ -120,7 +137,13 @@ public class AcService implements IAcService {
 
     @Override
     public synchronized void removeAc(AcRequest acRequest) {
+        if(!checkExist(acRequest.getRoomId())) return;
+
         String roomId = acRequest.getRoomId();
+        addLog(roomId, "turn off");
+        Room room = iRoomService.getRoomByRoomId(roomId);
+        room.setCost(room.getCost() + roomPriceList.get(Integer.parseInt(roomId) - 1));
+        iRoomService.updateRoom(room);
 
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(roomId)) {
@@ -144,7 +167,7 @@ public class AcService implements IAcService {
         List<AcRequest> waitQueueCopy = new ArrayList<>(waitQueue);
 
         System.out.println("serve queue: " + serveQueueCopy + "\n" + "wait queue: " + waitQueueCopy + "\n");
-        return "serve queue: " + serveQueueCopy + "\n" + "wait queue: " + waitQueueCopy + "\n";
+        return "{\"serve_queue\": " + serveQueueCopy + ", " + "\"wait_queue\": " + waitQueueCopy + "}";
     }
 
     @Override
@@ -152,7 +175,14 @@ public class AcService implements IAcService {
         List<AcServer> serveQueueCopy = new ArrayList<>(serveQueue);
         for (AcServer acServer : serveQueueCopy) {
             Room room = iRoomService.getRoomByRoomId(acServer.getRoomId());
-            room.setDu(room.getDu() + 1);
+
+            float tempDu = 0;
+            if(room.getAcMode() == 0) tempDu = duLow;
+            if(room.getAcMode() == 1) tempDu = duMid;
+            if(room.getAcMode() == 2) tempDu = duHigh;
+
+            room.setDu(room.getDu() + tempDu);
+            room.setCost(room.getCost() + tempDu * miPerDu);
             iRoomService.updateRoom(room);
 
             serveQueue.remove(acServer);
@@ -196,6 +226,7 @@ public class AcService implements IAcService {
                 d = 0f;
                 AcRequest acRequest = new AcRequest();
                 acRequest.setRoomId(room.getRoomId());
+//                addLog(room.getRoomId(), "meet target temperature");
 //                removeAc(acRequest);
             }
             if (room.getCurTemperature() > room.getTarTemperature1()) d = -0.5f;
@@ -217,5 +248,38 @@ public class AcService implements IAcService {
             }
         }
         return null;
+    }
+
+    String getNowTime(){
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
+    }
+
+    void addLog(String roomId, String logType){
+        Room room = iRoomService.getRoomByRoomId(roomId);
+        if(room == null) return;
+        float costRate = duLow * miPerDu;
+        if(room.getAcMode() == 1) costRate = duMid * miPerDu;
+        if(room.getAcMode() == 2) costRate = duHigh * miPerDu;
+        boolean flag = false;
+        for (AcServer acServer : new ArrayList<>(serveQueue)) {
+            if (acServer.getRoomId().equals(roomId)) flag = true;
+        }
+        if(!flag) costRate = 0;
+        LogUnit log = new LogUnit(logType, roomId, costRate, room.getCost(), getNowTime());
+        System.out.println(log);
+        iLogsService.addLog(log);
+    }
+
+    void updateAcOn(){
+        List<Room> rooms = iRoomService.getAllRooms();
+        for(Room room : new ArrayList<>(rooms)) {
+            boolean flag = false;
+            for (AcServer acServer : new ArrayList<>(serveQueue)) {
+                if (acServer.getRoomId().equals(room.getRoomId())) flag = true;
+            }
+            // TODO: 修改房间空调开关状态
+        }
     }
 }

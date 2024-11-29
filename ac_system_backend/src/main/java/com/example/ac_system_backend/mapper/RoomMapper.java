@@ -14,6 +14,6 @@ public interface RoomMapper {
     @Select("SELECT * FROM room WHERE room_id=#{roomId}")
     public Room selectRoomByRoomId(String roomId);
 
-    @Update("UPDATE room SET du=#{du}, cur_temperature=#{curTemperature}, init_temperature=#{initTemperature}, tar_temperature=#{tarTemperature}, ac_mode=#{acMode} WHERE room_id=#{roomId}")
+    @Update("UPDATE room SET du=#{du}, cur_temperature=#{curTemperature}, init_temperature=#{initTemperature}, tar_temperature=#{tarTemperature}, ac_mode=#{acMode}, cost=#{cost} WHERE room_id=#{roomId}")
     public void updateRoom(Room room);
 }

@@ -1,6 +1,7 @@
 import requests
 import read_file
 import time
+import json
 
 param_map = {
     '低': ['http://127.0.0.1:8082/api/change_ac_mode', {'roomId': "1", 'acMode': 0}],
@@ -12,8 +13,10 @@ param_map = {
 }
 
 tic_sec = 1.
+rooms = ['1', '2', '3', '4', '5']
 
 res_list = []
+queue_list = []
 
 
 session = requests.Session()
@@ -26,9 +29,9 @@ def post_req(url, param):
     # print(res.text)
 
 
-def show_queue():
+def get_queue():
     res = session.get('http://127.0.0.1:8082/api/show_queue')
-    print(res.text)
+    queue_list.append(json.loads(res.text))
 
 
 def init_rooms():
@@ -39,6 +42,14 @@ def init_rooms():
 def get_all_status():
     res = session.get("http://127.0.0.1:8082/api/get_room_status")
     return res
+
+
+def get_logs():  # 详单
+    ret = []
+    for room_id in rooms:
+        res = session.get(f"http://127.0.0.1:8082/api/get_room_logs?roomId={room_id}")
+        ret.append(res.json())
+    return ret
 
 
 def fuck(data_list):
@@ -60,6 +71,7 @@ def fuck(data_list):
                     post_req(param_map['digits'][0], param)
         status = get_all_status().json()
         res_list.append(status)
+        get_queue()
         print(i + 1, "finish")
         end = time.time()
         time.sleep(max(0., tic_sec - (end - start)))
@@ -67,5 +79,5 @@ def fuck(data_list):
 
 if __name__ == '__main__':
     fuck(read_file.get_data())
-    read_file.dict2xlsx(res_list)
+    read_file.dict2xlsx(res_list, get_logs(), queue_list)
     # show_queue()

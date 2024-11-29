@@ -14,6 +14,6 @@ public class AcTask {
     @Scheduled(fixedRateString = "${ac_settings.ms_per_tic}")
     public void taskPerTic() {
         iAcService.tic();
-        iAcService.showQueue();
+//        iAcService.showQueue();
     }
 }

@@ -9,7 +9,7 @@ public interface IAcService {
 
     public void updateQueue();
 
-    public void updateAc(AcRequest acRequest);
+    public void updateAc(AcRequest acRequest, String updateType);
 
     public void removeAc(AcRequest acRequest);
 
