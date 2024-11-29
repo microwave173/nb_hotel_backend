@@ -1,8 +1,12 @@
 package com.example.ac_system_backend.service.serviceImpl;
 
 import com.example.ac_system_backend.mapper.LogsMapper;
+import com.example.ac_system_backend.mapper.RoomMapper;
 import com.example.ac_system_backend.pojo.LogUnit;
+import com.example.ac_system_backend.pojo.Room;
+import com.example.ac_system_backend.service.IAcService;
 import com.example.ac_system_backend.service.ILogsService;
+import com.example.ac_system_backend.service.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +16,9 @@ import java.util.List;
 public class LogsService implements ILogsService {
     @Autowired
     LogsMapper logsMapper;
+
+    @Autowired
+    IRoomService iRoomService;
 
     @Override
     public void addLog(LogUnit logUnit) {

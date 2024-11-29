@@ -9,6 +9,7 @@ public class Room {
     private float tarTemperature;
     private float tarTemperature1;
     private int acMode;
+    private int status;
 
     public Room() {
     }
@@ -75,5 +76,13 @@ public class Room {
 
     public void setTarTemperature1(float tarTemperature1) {
         this.tarTemperature1 = tarTemperature1;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

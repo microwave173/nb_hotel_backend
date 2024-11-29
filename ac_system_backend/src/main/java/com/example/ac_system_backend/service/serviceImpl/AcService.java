@@ -69,6 +69,26 @@ public class AcService implements IAcService {
     }
 
     @Override
+    public synchronized boolean inServeQ(String roomId){
+        for (AcServer acServer : new ArrayList<>(serveQueue)) {
+            if (acServer.getRoomId().equals(roomId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public synchronized boolean inWaitQ(String roomId){
+        for (AcRequest acRequest : new ArrayList<>(waitQueue)) {
+            if (acRequest.getRoomId().equals(roomId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public synchronized void addAcRequest(AcRequest acRequest) {
         if (checkExist(acRequest.getRoomId())) return;
         addLog(acRequest.getRoomId(), "turn on");
@@ -248,6 +268,23 @@ public class AcService implements IAcService {
             }
         }
         return null;
+    }
+
+    @Override
+    public synchronized List<Room> getRoomStatus(){
+        List<Room> rooms = iRoomService.getAllRooms();
+        for(Room room : rooms){
+            if(inServeQ(room.getRoomId())){
+                room.setStatus(0);
+            }
+            else if(inWaitQ(room.getRoomId())){
+                room.setStatus(1);
+            }
+            else{
+                room.setStatus(2);
+            }
+        }
+        return rooms;
     }
 
     String getNowTime(){

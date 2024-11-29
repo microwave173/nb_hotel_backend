@@ -8,6 +8,4 @@ public interface IRoomService {
     public List<Room> getAllRooms();
     public Room getRoomByRoomId(String roomId);
     public void updateRoom(Room room);
-
-    public List<Room> getRoomStatus();
 }

@@ -1,6 +1,7 @@
 package com.example.ac_system_backend.service;
 
 import com.example.ac_system_backend.pojo.LogUnit;
+import com.example.ac_system_backend.pojo.Room;
 
 import java.util.List;
 

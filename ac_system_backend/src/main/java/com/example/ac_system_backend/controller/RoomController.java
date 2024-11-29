@@ -3,6 +3,7 @@ package com.example.ac_system_backend.controller;
 
 import com.example.ac_system_backend.pojo.LogUnit;
 import com.example.ac_system_backend.pojo.Room;
+import com.example.ac_system_backend.service.IAcService;
 import com.example.ac_system_backend.service.ILogsService;
 import com.example.ac_system_backend.service.IRoomService;
 import com.example.ac_system_backend.service.IUserService;
@@ -24,6 +25,9 @@ public class RoomController {
 
     @Autowired
     ILogsService iLogsService;
+
+    @Autowired
+    IAcService iAcService;
 
     @Value("${ac_settings.mi_per_du}")
     private float miPerDu;
@@ -53,7 +57,7 @@ public class RoomController {
     @GetMapping("api/get_room_status")
     public List<Room> getRoomStatus(@CookieValue("token") String token){
         if(!iUserService.checkUser(token)) return null;
-        return iRoomService.getRoomStatus();
+        return iAcService.getRoomStatus();
     }
 
     @GetMapping("api/get_room_logs")
