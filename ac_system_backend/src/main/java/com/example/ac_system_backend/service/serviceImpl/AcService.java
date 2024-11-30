@@ -221,6 +221,7 @@ public class AcService implements IAcService {
 
             room.setDu(room.getDu() + tempDu);
             room.setCost(room.getCost() + tempDu * miPerDu);
+            room.setCool(acServer.isCool());
             iRoomService.updateRoom(room);
 
             serveQueue.remove(acServer);
@@ -230,6 +231,10 @@ public class AcService implements IAcService {
 
         List<AcRequest> waitQueueCopy = new ArrayList<>(waitQueue);
         for (AcRequest acRequest : waitQueueCopy) {
+            Room room = iRoomService.getRoomByRoomId(acRequest.getRoomId());
+            room.setCool(acRequest.isCool());
+            iRoomService.updateRoom(room);
+
             waitQueue.remove(acRequest);
             acRequest.setWaitTic(acRequest.getWaitTic() + 1);
             waitQueue.offer(acRequest);

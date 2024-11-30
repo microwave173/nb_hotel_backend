@@ -11,6 +11,10 @@ public class Room {
     private int acMode;
     private int status;  // 0在服务队列， 1在等待队列， 2关
 
+    private boolean cool = true;
+
+
+
     public Room() {
     }
 
@@ -84,5 +88,13 @@ public class Room {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public boolean isCool() {
+        return cool;
+    }
+
+    public void setCool(boolean cool) {
+        this.cool = cool;
     }
 }
