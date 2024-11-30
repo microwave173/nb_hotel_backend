@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c as o,d as r,o as s}from"./index-BE7gfLc4.js";const c={},t={class:"manager-dashboard"};function n(d,a){return s(),o("div",t,a[0]||(a[0]=[r("h1",null,"酒店经理控制面板",-1)]))}const l=e(c,[["render",n],["__scopeId","data-v-536cc82c"]]);export{l as default};
