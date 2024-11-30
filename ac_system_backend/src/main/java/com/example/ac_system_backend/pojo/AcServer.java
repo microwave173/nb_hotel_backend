@@ -13,6 +13,7 @@ public class AcServer {
     private int serveTic;
 
     private int swapTic = 2;
+    private boolean cool;
 
     public AcServer() {
     }
@@ -22,6 +23,7 @@ public class AcServer {
         this.acTemperature = acRequest.getAcTemperature();
         this.acMode = acRequest.getAcMode();
         this.acOn = acRequest.isAcOn();
+        this.cool = acRequest.isCool();
     }
 
     public boolean betterThan(AcServer other){
@@ -97,6 +99,14 @@ public class AcServer {
 
     public int getNegServeTic(){
         return -this.serveTic;
+    }
+
+    public boolean isCool() {
+        return cool;
+    }
+
+    public void setCool(boolean cool) {
+        this.cool = cool;
     }
 
     public AcRequest toAcRequest(){

@@ -9,7 +9,7 @@ public class Room {
     private float tarTemperature;
     private float tarTemperature1;
     private int acMode;
-    private int status;
+    private int status;  // 0在服务队列， 1在等待队列， 2关
 
     public Room() {
     }

@@ -20,8 +20,5 @@ public interface IAcService {
 
     public void tic();
 
-    public boolean inServeQ(String roomId);
-    public boolean inWaitQ(String roomId);
-
     public List<Room> getRoomStatus();
 }

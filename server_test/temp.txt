@@ -1,0 +1,1 @@
+mysqldump -u root -p --all-databases --routines --triggers --skip-lock-tables --result-file="C:\toilet\BUPT_hotel_management_system-main\init.sql"

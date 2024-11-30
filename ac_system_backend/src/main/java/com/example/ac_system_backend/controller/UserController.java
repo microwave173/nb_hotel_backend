@@ -5,6 +5,7 @@ import com.example.ac_system_backend.service.IUserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ public class UserController {
     private IUserService iUserService;
 
     @PostMapping("api/submit")
+//    @CrossOrigin(origins = "*")
     public String submit(@RequestBody User user){
         try{
             user.setTag("customer");
@@ -27,6 +29,7 @@ public class UserController {
     }
 
     @PostMapping("api/login")
+//    @CrossOrigin(origins = "*")
     public String login(@RequestBody User user, HttpServletResponse response) {
         User user1 = iUserService.getUserByName(user.getName());
         if (user1 == null) {

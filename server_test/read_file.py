@@ -22,7 +22,7 @@ def get_data():
     return ret
 
 
-def dict2xlsx(data, logs, queues):
+def dict2xlsx(data, logs, queues, cost_list):
     i1 = 0
     for i in range(4, 30):
         j1 = 0
@@ -55,5 +55,8 @@ def dict2xlsx(data, logs, queues):
         for j in range(len(queues[i1]['wait_queue'])):
             sheet1.cell(row=i, column=j+31, value=queues[i1]['wait_queue'][j])
         i1 += 1
+
+    for j in range(2, 7):
+        sheet1.cell(row=30, column=j, value=cost_list[j - 2])
 
     workbook1.save('out.xlsx')

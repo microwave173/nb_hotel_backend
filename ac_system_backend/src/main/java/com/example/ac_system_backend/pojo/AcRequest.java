@@ -9,6 +9,7 @@ public class AcRequest {
     private int acTemperature;
     private int acMode;  // low, mid, high
     private boolean acOn;
+    private boolean cool;
 
     private int waitTic;
 
@@ -110,7 +111,15 @@ public class AcRequest {
         return acServer;
     }
 
-//    @Override
+    public boolean isCool() {
+        return cool;
+    }
+
+    public void setCool(boolean cool) {
+        this.cool = cool;
+    }
+
+    //    @Override
 //    public String toString() {
 //        return "{" +
 //                "roomId='" + roomId + '\'' +

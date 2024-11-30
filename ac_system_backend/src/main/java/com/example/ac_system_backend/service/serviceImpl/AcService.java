@@ -68,8 +68,7 @@ public class AcService implements IAcService {
         return false;
     }
 
-    @Override
-    public synchronized boolean inServeQ(String roomId){
+    synchronized boolean inServeQ(String roomId){
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(roomId)) {
                 return true;
@@ -78,8 +77,7 @@ public class AcService implements IAcService {
         return false;
     }
 
-    @Override
-    public synchronized boolean inWaitQ(String roomId){
+    synchronized boolean inWaitQ(String roomId){
         for (AcRequest acRequest : new ArrayList<>(waitQueue)) {
             if (acRequest.getRoomId().equals(roomId)) {
                 return true;
@@ -90,6 +88,16 @@ public class AcService implements IAcService {
 
     @Override
     public synchronized void addAcRequest(AcRequest acRequest) {
+        float roomInitTemp = iRoomService.getRoomByRoomId(acRequest.getRoomId()).getInitTemperature();
+        float tarTemp;
+//        if(acRequest.isCool()){
+//            tarTemp = Float.min(roomInitTemp, acRequest.getAcTemperature());
+//        }
+//        else{
+//            tarTemp = Float.max(roomInitTemp, acRequest.getAcTemperature());
+//        }
+        tarTemp = acRequest.getAcTemperature();
+        acRequest.setAcTemperature((int) tarTemp);
         if (checkExist(acRequest.getRoomId())) return;
         addLog(acRequest.getRoomId(), "turn on");
 
@@ -134,6 +142,16 @@ public class AcService implements IAcService {
 
     @Override
     public synchronized void updateAc(AcRequest acRequest, String updateType) {
+        float roomInitTemp = iRoomService.getRoomByRoomId(acRequest.getRoomId()).getInitTemperature();
+        float tarTemp;
+//        if(acRequest.isCool()){
+//            tarTemp = Float.min(roomInitTemp, acRequest.getAcTemperature());
+//        }
+//        else{
+//            tarTemp = Float.max(roomInitTemp, acRequest.getAcTemperature());
+//        }
+        tarTemp = acRequest.getAcTemperature();
+        acRequest.setAcTemperature((int) tarTemp);
         addLog(acRequest.getRoomId(), updateType);
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(acRequest.getRoomId())) {
@@ -223,7 +241,14 @@ public class AcService implements IAcService {
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             for (Room room : rooms) {
                 if (acServer.getRoomId().equals(room.getRoomId())) {
-                    room.setTarTemperature1(acServer.getAcTemperature());
+                    float tarTemp;
+                    if(acServer.isCool()){
+                        tarTemp = Float.min(room.getInitTemperature(), acServer.getAcTemperature());
+                    }
+                    else{
+                        tarTemp = Float.max(room.getInitTemperature(), acServer.getAcTemperature());
+                    }
+                    room.setTarTemperature1(tarTemp);
                     room.setTarTemperature(acServer.getAcTemperature());
                     room.setAcMode(acServer.getAcMode());
                     break;

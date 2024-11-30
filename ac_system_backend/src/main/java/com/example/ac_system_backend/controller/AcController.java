@@ -19,6 +19,7 @@ public class AcController {
     private boolean needCookie;
 
     @PostMapping("api/turn_on_ac")
+//    @CrossOrigin(origins = "*")
     public String turnOnAc(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
         try{
@@ -32,6 +33,7 @@ public class AcController {
     }
 
     @PostMapping("api/turn_off_ac")
+//    @CrossOrigin(origins = "*")
     public String turnOffAc(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
         try{
@@ -45,6 +47,7 @@ public class AcController {
     }
 
     @PostMapping("api/change_ac_params")
+//    @CrossOrigin(origins = "*")
     public String changeAcParams(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
         try{
@@ -58,11 +61,13 @@ public class AcController {
     }
 
     @PostMapping("api/change_ac_temp")
+//    @CrossOrigin(origins = "*")
     public String changeAcTemp(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
         try{
             AcRequest acRequest1 = iAcService.getAcRequestByRoomId(acRequest.getRoomId());
             acRequest1.setAcTemperature(acRequest.getAcTemperature());
+            acRequest1.setCool(acRequest.isCool());
             iAcService.updateAc(acRequest1, "update temperature");
         }
         catch (Exception e){
@@ -73,11 +78,13 @@ public class AcController {
     }
 
     @PostMapping("api/change_ac_mode")
+//    @CrossOrigin(origins = "*")
     public String changeAcMode(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
         try{
             AcRequest acRequest1 = iAcService.getAcRequestByRoomId(acRequest.getRoomId());
             acRequest1.setAcMode(acRequest.getAcMode());
+            acRequest1.setCool(acRequest.isCool());
             iAcService.updateAc(acRequest1, "update mode");
         }
         catch (Exception e){
@@ -88,11 +95,13 @@ public class AcController {
     }
 
     @GetMapping("api/tic")
+//    @CrossOrigin(origins = "*")
     public void tic(){
         iAcService.tic();
     }
 
     @GetMapping("api/show_queue")
+//    @CrossOrigin(origins = "*")
     public String showQueue(){
         return iAcService.showQueue();
     }

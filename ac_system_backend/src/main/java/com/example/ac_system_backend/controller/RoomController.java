@@ -10,6 +10,7 @@ import com.example.ac_system_backend.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +34,7 @@ public class RoomController {
     private float miPerDu;
 
     @GetMapping("api/init")
+//    @CrossOrigin(origins = "*")
     public void initRooms(){
         List<Room> rooms = iRoomService.getAllRooms();
         for(Room room : rooms){
@@ -47,6 +49,7 @@ public class RoomController {
     }
 
     @GetMapping("api/get_room_cost")
+//    @CrossOrigin(origins = "*")
     public float getRoomCost(String roomId, @CookieValue("token") String token){
         if(!iUserService.checkUser(token)) return -1;
         Room room = iRoomService.getRoomByRoomId(roomId);
@@ -55,12 +58,14 @@ public class RoomController {
     }
 
     @GetMapping("api/get_room_status")
+//    @CrossOrigin(origins = "*")
     public List<Room> getRoomStatus(@CookieValue("token") String token){
         if(!iUserService.checkUser(token)) return null;
         return iAcService.getRoomStatus();
     }
 
     @GetMapping("api/get_room_logs")
+//    @CrossOrigin(origins = "*")
     public List<LogUnit> getRoomLogs(String roomId, @CookieValue("token") String token){
         if(!iUserService.checkUser(token)) return null;
         return iLogsService.listLogByRoomId(roomId);
