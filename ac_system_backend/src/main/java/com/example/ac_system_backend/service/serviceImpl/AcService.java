@@ -212,18 +212,6 @@ public class AcService implements IAcService {
     public synchronized void tic() {
         List<AcServer> serveQueueCopy = new ArrayList<>(serveQueue);
         for (AcServer acServer : serveQueueCopy) {
-            Room room = iRoomService.getRoomByRoomId(acServer.getRoomId());
-
-            float tempDu = 0;
-            if(room.getAcMode() == 0) tempDu = duLow;
-            if(room.getAcMode() == 1) tempDu = duMid;
-            if(room.getAcMode() == 2) tempDu = duHigh;
-
-            room.setDu(room.getDu() + tempDu);
-            room.setCost(room.getCost() + tempDu * miPerDu);
-            room.setCool(acServer.isCool());
-            iRoomService.updateRoom(room);
-
             serveQueue.remove(acServer);
             acServer.setServeTic(acServer.getServeTic() + 1);
             serveQueue.offer(acServer);
@@ -271,7 +259,7 @@ public class AcService implements IAcService {
         }
         for (Room room : rooms) {
             float d = 0;
-            if (room.getCurTemperature() < room.getTarTemperature1()) d = 0.5f;
+            if (room.getCurTemperature() < room.getTarTemperature1()) d = 1f;
             if (room.getCurTemperature() == room.getTarTemperature1()){
                 d = 0f;
                 AcRequest acRequest = new AcRequest();
@@ -279,8 +267,26 @@ public class AcService implements IAcService {
 //                addLog(room.getRoomId(), "meet target temperature");
 //                removeAc(acRequest);
             }
-            if (room.getCurTemperature() > room.getTarTemperature1()) d = -0.5f;
+            if (room.getCurTemperature() > room.getTarTemperature1()) d = -1f;
+            if(room.getAcMode() == 0) d *= 0.3333;
+            if(room.getAcMode() == 1) d *= 0.5;
+            if(room.getAcMode() == 2) d *= 1;
             room.setCurTemperature(room.getCurTemperature() + d);
+            iRoomService.updateRoom(room);
+        }
+
+        serveQueueCopy = new ArrayList<>(serveQueue);
+        for (AcServer acServer : serveQueueCopy){
+            Room room = iRoomService.getRoomByRoomId(acServer.getRoomId());
+
+            float tempDu = 0;
+            if(room.getAcMode() == 0) tempDu = duLow;
+            if(room.getAcMode() == 1) tempDu = duMid;
+            if(room.getAcMode() == 2) tempDu = duHigh;
+
+            room.setDu(room.getDu() + tempDu);
+            room.setCost(room.getCost() + tempDu * miPerDu);
+            room.setCool(acServer.isCool());
             iRoomService.updateRoom(room);
         }
     }

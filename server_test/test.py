@@ -14,7 +14,7 @@ param_map = {
     'digits': ['http://127.0.0.1:8082/api/change_ac_temp', {'roomId': "1", 'acTemperature': 16, 'cool': cool}]
 }
 
-tic_sec = 1.
+tic_sec = 2.
 rooms = ['1', '2', '3', '4', '5']
 
 res_list = []
