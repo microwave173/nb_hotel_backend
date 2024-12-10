@@ -8,6 +8,8 @@ spring.datasource.username=root
 spring.datasource.password=18840607723ma
 ```
 
+在名为ac_data的数据库下运行init.sql初始化数据库
+
 运行Ac....tion就可以启动
 
 python测试脚本，直接运行test.py
