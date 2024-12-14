@@ -18,6 +18,13 @@ public class AcController {
     @Value("${need_cookie}")
     private boolean needCookie;
 
+    /**
+     * 开启空调。
+     *
+     * @param acRequest 空调请求信息（房间号、模式、温度等）
+     * @param token     用户认证的 Cookie
+     * @return 返回 "success" 表示成功，"failed" 表示失败
+     */
     @PostMapping("api/turn_on_ac")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String turnOnAc(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
@@ -32,6 +39,13 @@ public class AcController {
         return "success";
     }
 
+    /**
+     * 关闭空调。
+     *
+     * @param acRequest 空调请求信息
+     * @param token     用户认证的 Cookie
+     * @return 返回 "success" 表示成功，"failed" 表示失败
+     */
     @PostMapping("api/turn_off_ac")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String turnOffAc(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
@@ -46,6 +60,13 @@ public class AcController {
         return "success";
     }
 
+    /**
+     * 更改空调的参数（如风速、湿度等）。
+     *
+     * @param acRequest 空调请求信息
+     * @param token     用户认证的 Cookie
+     * @return 返回 "success" 表示成功，"failed" 表示失败
+     */
     @PostMapping("api/change_ac_params")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String changeAcParams(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
@@ -60,6 +81,13 @@ public class AcController {
         return "success";
     }
 
+    /**
+     * 更改空调的温度设置。
+     *
+     * @param acRequest 空调请求信息（包括房间号和目标温度）
+     * @param token     用户认证的 Cookie
+     * @return 返回 "success" 表示成功，"failed" 表示失败
+     */
     @PostMapping("api/change_ac_temp")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String changeAcTemp(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
@@ -77,6 +105,13 @@ public class AcController {
         return "success";
     }
 
+    /**
+     * 更改空调的运行模式。
+     *
+     * @param acRequest 空调请求信息（包括房间号和目标模式）
+     * @param token     用户认证的 Cookie
+     * @return 返回 "success" 表示成功，"failed" 表示失败
+     */
     @PostMapping("api/change_ac_mode")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String changeAcMode(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
@@ -94,12 +129,21 @@ public class AcController {
         return "success";
     }
 
+    /**
+     * 调试用：更新系统时间步。
+     * 模拟时间步的推进，用于测试系统运行。
+     */
     @GetMapping("api/tic")
 //    @CrossOrigin(origins = "*")
     public void tic(){
         iAcService.tic();
     }
 
+    /**
+     * 调试用：展示当前的服务队列和等待队列。
+     *
+     * @return 返回服务队列和等待队列的状态信息
+     */
     @GetMapping("api/show_queue")
 //    @CrossOrigin(origins = "*")
     public String showQueue(){

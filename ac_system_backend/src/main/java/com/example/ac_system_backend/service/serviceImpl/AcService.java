@@ -47,13 +47,24 @@ public class AcService implements IAcService {
     @Autowired
     private ILogsService iLogsService;
 
+    // 服务队列：使用优先队列存储当前正在服务的空调请求
+    // 优先级规则：按空调模式（风速）优先级排序，相同模式下按服务时间倒序排序
     private final PriorityQueue<AcServer> serveQueue = new PriorityQueue<>(
             Comparator.comparingInt(AcServer::getAcMode).thenComparingInt(AcServer::getNegServeTic)
     );
+
+    // 等待队列：使用优先队列存储尚未分配服务的空调请求
+    // 优先级规则：按空调模式（风速）优先级排序（取反以支持倒序），相同模式下按等待时间倒序排序
     private final PriorityQueue<AcRequest> waitQueue = new PriorityQueue<>(
             Comparator.comparingInt(AcRequest::getNegAcMode).thenComparingInt(AcRequest::getNegWaitTic)
     );
 
+    /**
+     * 检查指定房间是否已经存在于服务队列或等待队列中。
+     *
+     * @param roomId 房间编号
+     * @return 如果房间已存在于任一队列中返回 true，否则返回 false
+     */
     private synchronized boolean checkExist(String roomId) {
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(roomId)) {
@@ -68,6 +79,12 @@ public class AcService implements IAcService {
         return false;
     }
 
+    /**
+     * 检查指定房间是否在服务队列中。
+     *
+     * @param roomId 房间编号
+     * @return 如果房间在服务队列中返回 true，否则返回 false
+     */
     synchronized boolean inServeQ(String roomId){
         for (AcServer acServer : new ArrayList<>(serveQueue)) {
             if (acServer.getRoomId().equals(roomId)) {
@@ -77,6 +94,12 @@ public class AcService implements IAcService {
         return false;
     }
 
+    /**
+     * 检查指定房间是否在等待队列中。
+     *
+     * @param roomId 房间编号
+     * @return 如果房间在等待队列中返回 true，否则返回 false
+     */
     synchronized boolean inWaitQ(String roomId){
         for (AcRequest acRequest : new ArrayList<>(waitQueue)) {
             if (acRequest.getRoomId().equals(roomId)) {
@@ -323,12 +346,23 @@ public class AcService implements IAcService {
         return rooms;
     }
 
+    /**
+     * 获取当前系统时间，并格式化为指定的日期时间格式。
+     *
+     * @return 返回格式化后的当前时间字符串，格式为 "yyyy-MM-dd HH:mm:ss"
+     */
     String getNowTime(){
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return now.format(formatter);
     }
 
+    /**
+     * 添加房间的空调操作日志（详单）。
+     *
+     * @param roomId  房间编号
+     * @param logType 日志类型，表示操作类型（如开机、关机、调温等）
+     */
     void addLog(String roomId, String logType){
         Room room = iRoomService.getRoomByRoomId(roomId);
         if(room == null) return;
