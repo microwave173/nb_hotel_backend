@@ -113,7 +113,7 @@ public class AcService implements IAcService {
     public synchronized void updateQueue() {
         if (waitQueue.isEmpty()) return;
 
-        if (serveQueue.isEmpty()) {
+        if (serveQueue.size() < maxAcServerNum) {
             while (!waitQueue.isEmpty() && serveQueue.size() < maxAcServerNum) {
                 AcRequest acRequest = waitQueue.poll();
                 if (acRequest != null) {

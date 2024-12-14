@@ -3,15 +3,15 @@ import read_file
 import time
 import json
 
-cool = True
+cool = False
 
 param_map = {
     '低': ['http://127.0.0.1:8082/api/change_ac_mode', {'roomId': "1", 'acMode': 0, 'cool': cool}],
     '中': ['http://127.0.0.1:8082/api/change_ac_mode', {'roomId': "1", 'acMode': 1, 'cool': cool}],
     '高': ['http://127.0.0.1:8082/api/change_ac_mode', {'roomId': "1", 'acMode': 2, 'cool': cool}],
-    '开机': ['http://127.0.0.1:8082/api/turn_on_ac', {'roomId': "1", 'acTemperature': 16, 'acMode': 0, 'acOn': True, 'cool': cool}],
-    '关机': ['http://127.0.0.1:8082/api/turn_off_ac', {'roomId': "1", 'acTemperature': 16, 'acMode': 0, 'acOn': False, 'cool': cool}],
-    'digits': ['http://127.0.0.1:8082/api/change_ac_temp', {'roomId': "1", 'acTemperature': 16, 'cool': cool}]
+    '开机': ['http://127.0.0.1:8082/api/turn_on_ac', {'roomId': "1", 'acTemperature': 22, 'acMode': 1, 'acOn': True, 'cool': cool}],
+    '关机': ['http://127.0.0.1:8082/api/turn_off_ac', {'roomId': "1", 'acTemperature': 22, 'acMode': 1, 'acOn': False, 'cool': cool}],
+    'digits': ['http://127.0.0.1:8082/api/change_ac_temp', {'roomId': "1", 'acTemperature': 22, 'cool': cool}]
 }
 
 tic_sec = 2.
@@ -44,6 +44,7 @@ def init_rooms():
 
 def get_all_status():
     res = session.get("http://127.0.0.1:8082/api/get_room_status")
+    print(res.text)
     return res
 
 
@@ -89,5 +90,6 @@ if __name__ == '__main__':
     fuck(read_file.get_data())
     for room_id in rooms:
         cost_list.append(get_room_cost(room_id))
+    print(res_list)
     read_file.dict2xlsx(res_list, get_logs(), queue_list, cost_list)
     # show_queue()

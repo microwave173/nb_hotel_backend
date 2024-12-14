@@ -5,6 +5,7 @@ public class User {
     private String name;
     private String password;
     private String tag;
+    private String roomId;
 
     public User(){
 
@@ -46,5 +47,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 }

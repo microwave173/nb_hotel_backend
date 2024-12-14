@@ -8,4 +8,6 @@ public interface IUserService {
     public User getUserByName(String name);
 
     public boolean checkUser(String token);
+
+    public User getUserByToken(String token);
 }

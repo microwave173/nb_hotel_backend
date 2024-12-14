@@ -3,6 +3,7 @@ package com.example.ac_system_backend.controller;
 
 import com.example.ac_system_backend.pojo.LogUnit;
 import com.example.ac_system_backend.pojo.Room;
+import com.example.ac_system_backend.pojo.User;
 import com.example.ac_system_backend.service.IAcService;
 import com.example.ac_system_backend.service.ILogsService;
 import com.example.ac_system_backend.service.IRoomService;
@@ -57,7 +58,18 @@ public class RoomController {
         return room.getCost();
     }
 
-    @GetMapping("api/get_room_status")
+    @GetMapping("api/get_my_room_cost")
+//    @CrossOrigin(origins = "*")
+    public float getMyRoomCost(@CookieValue("token") String token){
+        if(!iUserService.checkUser(token)) return -1;
+        User user = iUserService.getUserByToken(token);
+        String roomId = user.getRoomId();
+        Room room = iRoomService.getRoomByRoomId(roomId);
+        if(room == null) return -1;
+        return room.getCost();
+    }
+
+    @GetMapping("api/get_room_status")  // trans ok
 //    @CrossOrigin(origins = "*")
     public List<Room> getRoomStatus(@CookieValue("token") String token){
         if(!iUserService.checkUser(token)) return null;
@@ -68,6 +80,15 @@ public class RoomController {
 //    @CrossOrigin(origins = "*")
     public List<LogUnit> getRoomLogs(String roomId, @CookieValue("token") String token){
         if(!iUserService.checkUser(token)) return null;
+        return iLogsService.listLogByRoomId(roomId);
+    }
+
+    @GetMapping("api/get_my_room_logs")
+//    @CrossOrigin(origins = "*")
+    public List<LogUnit> getMyRoomLogs(@CookieValue("token") String token){
+        if(!iUserService.checkUser(token)) return null;
+        User user = iUserService.getUserByToken(token);
+        String roomId = user.getRoomId();
         return iLogsService.listLogByRoomId(roomId);
     }
 }

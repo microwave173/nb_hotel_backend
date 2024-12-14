@@ -25,4 +25,10 @@ public class UserService implements IUserService {
         User user = userMapper.getUserByName(namePassword[0]);
         return user != null && user.getPassword().equals(namePassword[1]);
     }
+
+    @Override
+    public User getUserByToken(String token){
+        String[] namePassword = token.split(":");
+        return userMapper.getUserByName(namePassword[0]);
+    }
 }

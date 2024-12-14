@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Insert("INSERT INTO user (id, name, password, tag) VALUES (#{id}, #{name}, #{password}, #{tag})")
+    @Insert("INSERT INTO user (id, name, password, tag, roomId) VALUES (#{id}, #{name}, #{password}, #{tag}, #{room_id})")
     public void insertUser(User user);
 
     @Select("SELECT * FROM user WHERE name=#{name}")

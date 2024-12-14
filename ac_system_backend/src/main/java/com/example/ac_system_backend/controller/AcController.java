@@ -18,7 +18,7 @@ public class AcController {
     @Value("${need_cookie}")
     private boolean needCookie;
 
-    @PostMapping("api/turn_on_ac")
+    @PostMapping("api/turn_on_ac")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String turnOnAc(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
@@ -32,7 +32,7 @@ public class AcController {
         return "success";
     }
 
-    @PostMapping("api/turn_off_ac")
+    @PostMapping("api/turn_off_ac")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String turnOffAc(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
@@ -46,7 +46,7 @@ public class AcController {
         return "success";
     }
 
-    @PostMapping("api/change_ac_params")
+    @PostMapping("api/change_ac_params")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String changeAcParams(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
@@ -60,7 +60,7 @@ public class AcController {
         return "success";
     }
 
-    @PostMapping("api/change_ac_temp")
+    @PostMapping("api/change_ac_temp")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String changeAcTemp(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";
@@ -77,7 +77,7 @@ public class AcController {
         return "success";
     }
 
-    @PostMapping("api/change_ac_mode")
+    @PostMapping("api/change_ac_mode")  // trans ok
 //    @CrossOrigin(origins = "*")
     public String changeAcMode(@RequestBody AcRequest acRequest, @CookieValue("token") String token){
         if(needCookie && !iUserService.checkUser(token)) return "failed";

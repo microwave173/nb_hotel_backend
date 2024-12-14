@@ -1,10 +1,11 @@
 from openpyxl import load_workbook
 
+folder = 'heat'
 
-workbook = load_workbook(filename="in.xlsx")
+workbook = load_workbook(filename=f"{folder}/in.xlsx")
 sheet = workbook["Sheet1"]
 
-workbook1 = load_workbook(filename="out.xlsx")
+workbook1 = load_workbook(filename=f"{folder}/out.xlsx")
 sheet1 = workbook1["Sheet1"]  # 4, 7
 
 
@@ -59,4 +60,4 @@ def dict2xlsx(data, logs, queues, cost_list):
     for j in range(2, 7):
         sheet1.cell(row=30, column=j, value=cost_list[j - 2])
 
-    workbook1.save('out.xlsx')
+    workbook1.save(f'{folder}/out.xlsx')
