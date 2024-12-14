@@ -4,14 +4,13 @@ package com.example.ac_system_backend.controller;
 import com.example.ac_system_backend.pojo.LogUnit;
 import com.example.ac_system_backend.pojo.Room;
 import com.example.ac_system_backend.pojo.User;
-import com.example.ac_system_backend.service.IAcService;
-import com.example.ac_system_backend.service.ILogsService;
-import com.example.ac_system_backend.service.IRoomService;
-import com.example.ac_system_backend.service.IUserService;
+import com.example.ac_system_backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,6 +26,9 @@ public class RoomController {
 
     @Autowired
     IAcService iAcService;
+
+    @Autowired
+    IExcelService iExcelService;
 
     @Value("${ac_settings.mi_per_du}")
     private float miPerDu;
@@ -163,5 +165,17 @@ public class RoomController {
         if(!iUserService.checkUser(token)) return "failed";
         iRoomService.checkOut(room.getRoomId());
         return "success";
+    }
+
+    @GetMapping("api/get_log_xlsx")
+    public ResponseEntity<byte[]> getLogXlsx(String roomId, @CookieValue("token") String token) throws IOException {
+        if(!iUserService.checkUser(token)) return null;
+        return iExcelService.getLogXlsx(roomId);
+    }
+
+    @GetMapping("api/get_cost_xlsx")
+    public ResponseEntity<byte[]> getCostXlsx(String roomId, @CookieValue("token") String token) throws IOException {
+        if(!iUserService.checkUser(token)) return null;
+        return iExcelService.getCostXlsx(roomId);
     }
 }

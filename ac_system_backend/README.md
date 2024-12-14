@@ -52,5 +52,54 @@ return: {
 	"status": 0,
 	"cool": true
 }
+
+获取详单xlsx:
+api/get_log_xlsx
+method: GET
+params: roomId
+return: blob
+前端下载样例:
+<template>
+    <div>
+        <button @click="downloadExcel">下载 Excel</button>
+    </div>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+    methods: {
+        async downloadExcel() {
+            try {
+                const response = await axios.get('/api/get_log_xlsx', {
+                    responseType: 'blob', // 确保接收二进制文件
+                });
+
+                // 创建 Blob 对象
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const link = document.createElement('a');
+
+                // 创建下载链接
+                link.href = URL.createObjectURL(blob);
+                link.download = 'example.xlsx';
+                link.click();
+
+                // 释放 URL
+                URL.revokeObjectURL(link.href);
+            } catch (error) {
+                console.error('下载失败', error);
+            }
+        }
+    }
+}
+</script>
+
+获取账单xlsx:
+api/get_cost_xlsx
+method: GET
+params: roomId
+return: blob
+
 ```
 
