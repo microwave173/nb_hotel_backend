@@ -26,13 +26,16 @@ public class UserController {
     @PostMapping("api/submit")
 //    @CrossOrigin(origins = "*")
     public String submit(@RequestBody User user){
-        try{
-            user.setTag("customer");
-            iUserService.addUser(user);
-        }
-        catch (Exception e){
-            return "failed";
-        }
+//        try{
+//            user.setTag("customer");
+//            iUserService.addUser(user);
+//        }
+//        catch (Exception e){
+//            System.out.println(e.toString());
+//            return "failed";
+//        }
+        user.setTag("customer");
+        iUserService.addUser(user);
         return "success";
     }
 

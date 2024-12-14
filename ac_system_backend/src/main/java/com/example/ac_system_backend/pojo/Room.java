@@ -97,4 +97,20 @@ public class Room {
     public void setCool(boolean cool) {
         this.cool = cool;
     }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomId='" + roomId + '\'' +
+                ", du=" + du +
+                ", cost=" + cost +
+                ", curTemperature=" + curTemperature +
+                ", initTemperature=" + initTemperature +
+                ", tarTemperature=" + tarTemperature +
+                ", tarTemperature1=" + tarTemperature1 +
+                ", acMode=" + acMode +
+                ", status=" + status +
+                ", cool=" + cool +
+                '}';
+    }
 }

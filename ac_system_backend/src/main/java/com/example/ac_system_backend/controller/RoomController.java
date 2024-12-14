@@ -10,10 +10,7 @@ import com.example.ac_system_backend.service.IRoomService;
 import com.example.ac_system_backend.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -126,5 +123,45 @@ public class RoomController {
         User user = iUserService.getUserByToken(token);
         String roomId = user.getRoomId();
         return iLogsService.listLogByRoomId(roomId);
+    }
+
+    /**
+     * 查询当前用户所在房间。
+     *
+     * @param token 用户认证的 Cookie
+     * @return 返回房间，认证失败时返回 null
+     */
+    @GetMapping("api/get_my_room")
+    public Room getMyRoom(@CookieValue("token") String token){
+        if(!iUserService.checkUser(token)) return null;
+        User user = iUserService.getUserByToken(token);
+        String roomId = user.getRoomId();
+        return iRoomService.getRoomByRoomId(roomId);
+    }
+
+    /**
+     * 查询当前所有有空房间。
+     *
+     * @param token 用户认证的 Cookie
+     * @return 返回房间列表，认证失败时返回 null
+     */
+    @GetMapping("api/get_all_empty_rooms")
+    public List<String> getAllEmptyRooms(@CookieValue("token") String token){
+        if(!iUserService.checkUser(token)) return null;
+        return iRoomService.getEmptyRooms();
+    }
+
+    /**
+     * 退房。
+     *
+     * @param room 房间
+     * @param token 用户认证的 Cookie
+     * @return 成功返回"success"，验证失败返回"failed"
+     */
+    @PostMapping("api/check_out")
+    public String checkOut(@RequestBody Room room, @CookieValue("token") String token){
+        if(!iUserService.checkUser(token)) return "failed";
+        iRoomService.checkOut(room.getRoomId());
+        return "success";
     }
 }

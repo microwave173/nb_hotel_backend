@@ -34,4 +34,13 @@ public interface IRoomService {
      * @param room 房间对象，包含需要更新的属性
      */
     public void updateRoom(Room room);
+
+    /**
+     * 获取所有空房间的房间号。
+     *
+     * @return 返回空房间的房间号列表
+     */
+    public List<String> getEmptyRooms();
+
+    public void checkOut(String roomId);
 }

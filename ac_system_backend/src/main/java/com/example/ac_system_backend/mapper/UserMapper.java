@@ -1,9 +1,9 @@
 package com.example.ac_system_backend.mapper;
 
 import com.example.ac_system_backend.pojo.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 /**
  * UserMapper 接口用于操作与用户相关的数据库表。
@@ -18,7 +18,7 @@ public interface UserMapper {
      *
      * @param user 用户对象，包含需要插入的数据字段
      */
-    @Insert("INSERT INTO user (id, name, password, tag, roomId) VALUES (#{id}, #{name}, #{password}, #{tag}, #{room_id})")
+    @Insert("INSERT INTO user (id, name, password, tag, room_id) VALUES (#{id}, #{name}, #{password}, #{tag}, #{roomId})")
     public void insertUser(User user);
 
     /**
@@ -30,4 +30,16 @@ public interface UserMapper {
      */
     @Select("SELECT * FROM user WHERE name=#{name}")
     public User getUserByName(String name);
+
+    /**
+     * 获取所有用户。
+     */
+    @Select("SELECT * FROM user")
+    public List<User> listAllUsers();
+
+    /**
+     * 根据名字删除用户。
+     */
+    @Delete("DELETE FROM user WHERE name = #{name}")
+    public void deleteUserByName(@Param("name") String name);
 }
