@@ -167,12 +167,26 @@ public class RoomController {
         return "success";
     }
 
+    /**
+     * 获取详单。
+     *
+     * @param roomId 房间号
+     * @param token 用户认证的 Cookie
+     * @return 返回xlsx的二进制流。
+     */
     @GetMapping("api/get_log_xlsx")
     public ResponseEntity<byte[]> getLogXlsx(String roomId, @CookieValue("token") String token) throws IOException {
         if(!iUserService.checkUser(token)) return null;
         return iExcelService.getLogXlsx(roomId);
     }
 
+    /**
+     * 获取账单。
+     *
+     * @param roomId 房间号
+     * @param token 用户认证的 Cookie
+     * @return 返回xlsx的二进制流。
+     */
     @GetMapping("api/get_cost_xlsx")
     public ResponseEntity<byte[]> getCostXlsx(String roomId, @CookieValue("token") String token) throws IOException {
         if(!iUserService.checkUser(token)) return null;
